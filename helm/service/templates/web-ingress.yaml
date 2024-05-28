@@ -1,0 +1,54 @@
+{{ $env := .Values.env.name | required "env.name is required" }}
+{{ $envShort := .Values.env.shortName | required "env.shortName is required" }}
+{{ $serviceName := "codebuilddeploy-identity" }}
+{{ $instanceName := printf "%s-%s" $env $serviceName }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  name: {{ $instanceName }}
+spec:
+  ingressClassName: nginx
+  rules:
+  {{ if eq $env "live" }}
+  - host: www.codebuilddeploy.co.uk
+  {{ else }}
+  - host: {{ $env }}.codebuilddeploy.co.uk
+  {{ end }}
+    http:
+      paths:
+      - path: /Identity
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ $instanceName }}
+            port:
+              number: 80
+  {{ if eq $env "live" }}
+  - host: www.codebuilddeploy.com
+  {{ else }}
+  - host: {{ $env }}.codebuilddeploy.com
+  {{ end }}
+    http:
+      paths:
+      - path: /Identity
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ $instanceName }}
+            port:
+              number: 80
+  tls:
+    - hosts:
+      {{ if eq $env "live" }}
+        - www.codebuilddeploy.co.uk
+        - www.codebuilddeploy.com
+      {{ else }}
+        - {{ $env }}.codebuilddeploy.co.uk
+        - {{ $env }}.codebuilddeploy.com
+      {{ end }}
+      secretName: cbd-{{ $env }}-ssl-cert
+
+status:
+  loadBalancer: {}

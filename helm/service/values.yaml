@@ -1,0 +1,16 @@
+# Required environment specific values for the services
+env:
+  name: null
+  shortName: null
+
+# Production values for the services
+replicas:
+  web:
+    min: 1
+
+resources:
+  web:
+    cpu:
+      request:  64m
+      limit: 128m
+    memory: 768Mi

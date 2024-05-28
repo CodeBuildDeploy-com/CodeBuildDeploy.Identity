@@ -1,0 +1,154 @@
+trigger:
+  branches:
+    include:
+    - refs/heads/main
+    - refs/heads/release/*
+
+pool:
+  vmImage: ubuntu-latest
+
+resources:
+  repositories:
+  - repository: self
+  - repository: subplatform
+    type: git
+    name: 'CodeBuildDeploy.Platform.Subscription'
+  - repository: appplatform
+    type: git
+    name: 'CodeBuildDeploy.Platform.App'
+
+variables:
+- name: Service.Name.KebabCase
+  value: "codebuilddeploy-identity"
+
+- template: azureDevOps/variables-infrastructure.yml@subplatform
+- template: azureDevOps/variables-infrastructure.yml@appplatform
+
+- template: azureDevOps/variables-build.yml@subplatform
+
+- template: azureDevOps/variables-versioning.yml@subplatform
+  parameters:
+    buildTypeRelease: ${{ variables['build.type.release'] }}
+    majorVersion: 1
+    minorVersion: 0
+
+name: $[variables['Build.Number']]
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Docker Build and Deploy
+    steps:
+    - checkout: self
+      displayName: 'Checkout Repo'
+      persistCredentials: true
+
+    - bash: |
+        echo "build.type.release = $(build.type.release)"
+        echo "SourceVersion = $(Build.SourceVersion)"
+        echo "SourceVersion.Short = $(Build.SourceVersion.Short)"
+        echo "Build Number = $(Build.Number)"
+        echo "Version Assembly = $(Version.Assembly)"
+        echo "Version File = $(Version.File)"
+        echo "Version Informational = $(Version.Informational)"
+        echo "Version Major = $(Version.Major)"
+        echo "Version Minor = $(Version.Minor)"
+        echo "Version Patch = $(Version.Patch)"
+      displayName: Output Version
+
+    - task: NuGetAuthenticate@1
+      displayName: 'Authenticate to NuGet'
+
+    - task: Docker@2
+      displayName: Build App Image
+      inputs:
+        command: build
+        containerRegistry: $(Acr.Repository.Connect)
+        repository: $(Service.Name.KebabCase)
+        tags: |
+          latest
+          $(Build.Number)
+        Dockerfile: '$(Build.SourcesDirectory)/src/CodeBuildDeploy.Identity.Web/Dockerfile'
+        buildContext: .
+        arguments: '--target final --build-arg FEED_ACCESSTOKEN=$(VSS_NUGET_ACCESSTOKEN) --build-arg VERSION=$(Build.Number) --build-arg ASSEMBLY_VERSION=$(Version.Assembly) --build-arg FILE_VERSION=$(Version.File) --build-arg INFORMATIONAL_VERSION=$(Version.Informational) --build-arg PACKAGE_VERSION=$(Build.Number)'
+
+    - task: Docker@2
+      displayName: Build Data Image
+      inputs:
+        command: build
+        containerRegistry: $(Acr.Repository.Connect)
+        repository: "${{ variables['Service.Name.KebabCase'] }}-data"
+        tags: |
+          latest
+          $(Build.Number)
+        Dockerfile: '$(Build.SourcesDirectory)/src/CodeBuildDeploy.Identity.Web/Dockerfile'
+        buildContext: .
+        arguments: '--target finalMigration --build-arg FEED_ACCESSTOKEN=$(VSS_NUGET_ACCESSTOKEN) --build-arg VERSION=$(Build.Number) --build-arg ASSEMBLY_VERSION=$(Version.Assembly) --build-arg FILE_VERSION=$(Version.File) --build-arg INFORMATIONAL_VERSION=$(Version.Informational) --build-arg PACKAGE_VERSION=$(Build.Number)'
+
+    - task: PowerShell@2
+      displayName: Helm Set Image Versions
+      env:
+        APP_IMAGE: $(Acr.Repository.Name).azurecr.io/$(Service.Name.KebabCase):$(Build.Number)
+        DATA_NAME_VERSION: "$(Version.Informational.Kebab)"
+        DATA_IMAGE: "$(Acr.Repository.Name).azurecr.io/$(Service.Name.KebabCase)-data:$(Build.Number)"
+      inputs:
+        targetType: inline
+        script: |
+          sed -ri -e "s#image: \{\{ required `"Populated by build`" null \}\}#image: ${env:APP_IMAGE}#" helm/service/templates/web-deployment.yaml
+          sed -ri -e "s/-\{\{ required `"name append populated by build`" null \}\}/-${env:DATA_NAME_VERSION}/" helm/service/templates/data-job.yaml
+          sed -ri -e "s#image: \{\{ required `"Populated by build`" null \}\}#image: ${env:DATA_IMAGE}#" helm/service/templates/data-job.yaml
+    
+    - task: HelmDeploy@0
+      displayName: Helm Package
+      inputs:
+        command: package
+        chartPath: helm/service
+        destination: $(Build.ArtifactStagingDirectory)/helm
+        chartVersion: $(Build.Number)
+
+    - ${{ if ne(variables['Build.Reason'], 'PullRequest') }}:
+      - task: Docker@2
+        displayName: Docker Push
+        inputs:
+          command: push
+          containerRegistry: $(Acr.Repository.Connect)
+          repository: $(Service.Name.KebabCase)
+          tags: |
+            latest
+            $(Build.Number)
+
+      - task: Docker@2
+        displayName: Push Data Image
+        inputs:
+          command: push
+          containerRegistry: $(Acr.Repository.Connect)
+          repository: "$(Service.Name.KebabCase)-data"
+          tags: |
+            latest
+            $(Build.Number)
+
+      - task: AzureCLI@2
+        displayName: ACR Login
+        inputs:
+          azureSubscription: '$(Azure.Subscription.ProdPremium)'
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: |
+            az acr login --name $(Acr.Repository.Name).azurecr.io
+
+      - task: PowerShell@2
+        displayName: Push Helm Chart
+        env:
+          CHART: $(Build.ArtifactStagingDirectory)/helm/$(Service.Name.KebabCase)-$(Build.Number).tgz
+        inputs:
+          targetType: inline
+          script: |
+            helm push ${env:CHART} $(Helm.Chart.BaseUrl)
+
+      - script: |
+          git tag $(Build.Number)
+          git push origin $(Build.Number)
+        workingDirectory: $(Build.SourcesDirectory)
+        displayName: Tag Version in Git

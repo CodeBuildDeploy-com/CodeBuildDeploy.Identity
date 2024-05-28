@@ -1,0 +1,43 @@
+name: codebuilddeploy-identity
+
+networks:
+  development:
+    name: codebuilddeploy
+    driver: bridge
+
+services:
+  codebuilddeploy-identity-data:
+    image: codebuilddeploy.azurecr.io/codebuilddeploy-identity-data:latest
+    build:
+      context: .
+      dockerfile: ./src/CodeBuildDeploy.Identity.Web/Dockerfile
+      target: finalMigration
+      args:
+        FEED_ACCESSTOKEN: $FEED_ACCESSTOKEN
+    env_file: .env
+    networks:
+      - development
+    container_name: codebuilddeploy-identity-data
+    hostname: codebuilddeploy-identity-data
+    
+  codebuilddeploy-identity:
+    image: codebuilddeploy.azurecr.io/codebuilddeploy-identity:latest
+    build:
+      context: .
+      dockerfile: ./src/CodeBuildDeploy.Identity.Web/Dockerfile
+      target: final
+      args:
+        FEED_ACCESSTOKEN: $FEED_ACCESSTOKEN
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:5007
+      ASPNETCORE_Kestrel__Certificates__Default__Password: $CERT_PASSWORD
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/code-build-deploy.pfx
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    ports:
+      - 5007:5007
+    networks:
+      - development
+    container_name: codebuilddeploy-identity
+    hostname: codebuilddeploy-identity
