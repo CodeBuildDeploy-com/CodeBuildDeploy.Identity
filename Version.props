@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <VersionPropsFileImported>true</VersionPropsFileImported>
+
+    <MajorVersion>1</MajorVersion>
+    <MinorVersion>0</MinorVersion>
+    
+    <Version>$(MajorVersion).$(MinorVersion).0-local</Version>   
+    <AssemblyVersion>$(MajorVersion).$(MinorVersion).0</AssemblyVersion>  
+    <FileVersion>$(MajorVersion).$(MinorVersion).0.0</FileVersion>    
+    <InformationalVersion>$(MajorVersion).$(MinorVersion).0-local</InformationalVersion>    
+    <PackageVersion>$(MajorVersion).$(MinorVersion).0-local</PackageVersion>
+  </PropertyGroup>
+</Project>

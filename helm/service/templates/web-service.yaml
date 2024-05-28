@@ -1,0 +1,17 @@
+{{ $env := .Values.env.name | required "env.name is required" }}
+{{ $envShort := .Values.env.shortName | required "env.shortName is required" }}
+{{ $serviceName := "codebuilddeploy-identity" }}
+{{ $instanceName := printf "%s-%s" $env $serviceName }}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ $instanceName }}
+  name: {{ $instanceName }}
+spec:
+  ports:
+    - name: "http"
+      port: 80
+      targetPort: 8080
+  selector:
+    app: {{ $instanceName }}
