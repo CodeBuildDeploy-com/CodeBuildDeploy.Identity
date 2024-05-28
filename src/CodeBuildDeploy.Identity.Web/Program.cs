@@ -80,11 +80,18 @@ static async Task ConfigureServicesAsync(WebApplicationBuilder builder)
     builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-    builder.Services.AddAuthentication();
-        //.AddMicrosoftAccount(microsoftOptions => {})
-        //.AddGoogle(googleOptions => {})
-        //.AddTwitter(twitterOptions => {})
-        //.AddFacebook(facebookOptions => {});
+    builder.Services.AddAuthentication()
+                    .AddMicrosoftAccount(microsoftOptions => 
+                    {
+                        microsoftOptions.ClientId = builder.Configuration["Authentication:Microsoft:ClientId"]!;
+                        microsoftOptions.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"]!;
+                    })
+                    .AddGoogle(googleOptions =>
+                    {
+                        googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
+                        googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+                    });
+                    //.AddFacebook(facebookOptions => {});
     builder.Services.AddRazorPages();
     builder.Services.AddHealthChecks();
 
