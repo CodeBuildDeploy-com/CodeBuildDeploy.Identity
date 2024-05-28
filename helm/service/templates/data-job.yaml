@@ -1,0 +1,31 @@
+{{ $env := .Values.env.name | required "env.name is required" }}
+{{ $envShort := .Values.env.shortName | required "env.shortName is required" }}
+{{ $serviceName := "codebuilddeploy-identity-data" }}
+{{ $instanceName := printf "%s-%s" $env $serviceName }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ $instanceName }}-{{ required "name append populated by build" null }}
+spec:
+  template:
+    spec:
+      containers:
+        - name: {{ $serviceName }}
+
+          image: {{ required "Populated by build" null }}
+          imagePullPolicy: IfNotPresent
+
+          env:
+            - name: ConnectionStrings__AccountMigrationConnection
+              valueFrom:
+                secretKeyRef:
+                  name: cbd-{{ $env }}-secret
+                  key: ConnectionStrings__AccountMigrationConnection
+
+            - name: ASPNETCORE_ENVIRONMENT
+              value: {{ $env }}
+
+      imagePullSecrets:
+        - name: cbd-pull-secret
+      
+      restartPolicy: "OnFailure"

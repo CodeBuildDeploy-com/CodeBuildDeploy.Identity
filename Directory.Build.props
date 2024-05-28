@@ -1,0 +1,8 @@
+<Project>
+
+  <Import Project="Version.props" />
+  
+  <PropertyGroup>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>
