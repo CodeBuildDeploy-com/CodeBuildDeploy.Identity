@@ -80,11 +80,37 @@ static async Task ConfigureServicesAsync(WebApplicationBuilder builder)
     builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-    builder.Services.AddAuthentication();
-        //.AddMicrosoftAccount(microsoftOptions => {})
-        //.AddGoogle(googleOptions => {})
-        //.AddTwitter(twitterOptions => {})
-        //.AddFacebook(facebookOptions => {});
+    var authBuilder = builder.Services.AddAuthentication();
+    var microsoftAuthSection = builder.Configuration.GetSection("Authentication:Microsoft");
+    if (microsoftAuthSection != null)
+    {
+        authBuilder.AddMicrosoftAccount(microsoftOptions =>
+        {
+            microsoftOptions.ClientId = microsoftAuthSection["ClientId"]!;
+            microsoftOptions.ClientSecret = microsoftAuthSection["ClientSecret"]!;
+            microsoftOptions.CallbackPath = "/Identity/signin-microsoft";
+        });
+    }
+    var googleAuthSection = builder.Configuration.GetSection("Authentication:Google");
+    if (googleAuthSection != null)
+    {
+        authBuilder.AddGoogle(googleOptions =>
+        {
+            googleOptions.ClientId = googleAuthSection["ClientId"]!;
+            googleOptions.ClientSecret = googleAuthSection["ClientSecret"]!;
+            googleOptions.CallbackPath = "/Identity/signin-google";
+        });
+    }
+    var facebookAuthSection = builder.Configuration.GetSection("Authentication:Facebook");
+    if (facebookAuthSection != null)
+    {
+        authBuilder.AddFacebook(facebookOptions =>
+        {
+            facebookOptions.ClientId = facebookAuthSection["ClientId"]!;
+            facebookOptions.ClientSecret = facebookAuthSection["ClientSecret"]!;
+            facebookOptions.CallbackPath = "/Identity/signin-facebook";
+        });
+    }
     builder.Services.AddRazorPages();
     builder.Services.AddHealthChecks();
 

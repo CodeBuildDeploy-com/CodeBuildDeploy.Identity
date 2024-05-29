@@ -33,6 +33,30 @@ spec:
                 secretKeyRef:
                   name: cbd-{{ $env }}-secret
                   key: ConnectionStrings__AccountConnection
+            
+            - name: Authentication__Google__ClientId
+              valueFrom:
+                secretKeyRef:
+                  name: cbd-{{ $env }}-secret
+                  key: Authentication__Google__ClientId
+            
+            - name: Authentication__Google__ClientSecret
+              valueFrom:
+                secretKeyRef:
+                  name: cbd-{{ $env }}-secret
+                  key: Authentication__Google__ClientSecret
+            
+            - name: Authentication__Microsoft__ClientId
+              valueFrom:
+                secretKeyRef:
+                  name: cbd-{{ $env }}-secret
+                  key: Authentication__Microsoft__ClientId
+            
+            - name: Authentication__Microsoft__ClientSecret
+              valueFrom:
+                secretKeyRef:
+                  name: cbd-{{ $env }}-secret
+                  key: Authentication__Microsoft__ClientSecret
 
             - name: ServiceIdentifiers__OwnerId
               value: "codebuilddeploy-identity"

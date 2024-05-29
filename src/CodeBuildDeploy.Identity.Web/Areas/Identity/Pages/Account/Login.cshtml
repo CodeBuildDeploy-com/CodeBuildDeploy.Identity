@@ -52,12 +52,12 @@
                     <div class="mb-5">
                         <button class="btn btn-md btn-block u-btn-primary g-py-13" type="submit">Login</button>
                     </div>
-
-                    <!-- Form Social Icons -->
-                    @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = @Model.ReturnUrl, ExternalLogins = @Model.ExternalLogins })
-                    <!-- End Form Social Icons -->
                 </form>
                 <!-- End Form -->
+
+                <!-- Form Social Icons -->
+                @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = @Model.ReturnUrl, ExternalLogins = @Model.ExternalLogins })
+                <!-- End Form Social Icons -->
 
                 <div class="d-flex justify-content-center text-center g-mb-30">
                     <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
