@@ -34,6 +34,12 @@ COPY . .
 WORKDIR "/work/src/CodeBuildDeploy.Identity.Web"
 RUN dotnet build "./CodeBuildDeploy.Identity.Web.csproj" --no-restore -p:Version=${VERSION} -p:AssemblyVersion=${ASSEMBLY_VERSION} -p:FileVersion=${FILE_VERSION} -p:InformationalVersion=${INFORMATIONAL_VERSION} -p:PackageVersion=${PACKAGE_VERSION} -c $BUILD_CONFIGURATION -o /app/build
 
+FROM build AS push
+WORKDIR /work
+RUN dotnet pack "./src/CodeBuildDeploy.Identity.DA.Abstractions/CodeBuildDeploy.Identity.DA.Abstractions.csproj" --no-build -p:OutDir=/app/build -p:Version=${VERSION} -p:AssemblyVersion=${ASSEMBLY_VERSION} -p:FileVersion=${FILE_VERSION} -p:InformationalVersion=${INFORMATIONAL_VERSION} -p:PackageVersion=${PACKAGE_VERSION} -c $BUILD_CONFIGURATION -o /app/packages
+RUN dotnet pack "./src/CodeBuildDeploy.Identity.DA.EF/CodeBuildDeploy.Identity.DA.EF.csproj" --no-build -p:OutDir=/app/build -p:Version=${VERSION} -p:AssemblyVersion=${ASSEMBLY_VERSION} -p:FileVersion=${FILE_VERSION} -p:InformationalVersion=${INFORMATIONAL_VERSION} -p:PackageVersion=${PACKAGE_VERSION} -c $BUILD_CONFIGURATION -o /app/packages
+RUN dotnet nuget push "/app/packages/*.nupkg" -s CodeBuildDeploy -k "${FEED_ACCESSTOKEN}"
+
 FROM build AS publish
 WORKDIR "/work/src/CodeBuildDeploy.Identity.Web"
 RUN dotnet publish "./CodeBuildDeploy.Identity.Web.csproj" --no-build -p:OutDir=/app/build -p:Version=${VERSION} -p:AssemblyVersion=${ASSEMBLY_VERSION} -p:FileVersion=${FILE_VERSION} -p:InformationalVersion=${INFORMATIONAL_VERSION} -p:PackageVersion=${PACKAGE_VERSION} -c $BUILD_CONFIGURATION -o /app/publish
