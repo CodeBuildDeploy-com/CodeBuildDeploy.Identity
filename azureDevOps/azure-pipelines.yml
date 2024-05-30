@@ -62,6 +62,19 @@ stages:
       displayName: 'Authenticate to NuGet'
 
     - task: Docker@2
+      displayName: Build and Push NuGet Libraries
+      inputs:
+        command: build
+        containerRegistry: $(Acr.Repository.Connect)
+        repository: $(Service.Name.KebabCase)
+        tags: |
+          latest
+          $(Build.Number)
+        Dockerfile: '$(Build.SourcesDirectory)/src/CodeBuildDeploy.Identity.Web/Dockerfile'
+        buildContext: .
+        arguments: '--target push --build-arg FEED_ACCESSTOKEN=$(VSS_NUGET_ACCESSTOKEN) --build-arg VERSION=$(Build.Number) --build-arg ASSEMBLY_VERSION=$(Version.Assembly) --build-arg FILE_VERSION=$(Version.File) --build-arg INFORMATIONAL_VERSION=$(Version.Informational) --build-arg PACKAGE_VERSION=$(Build.Number)'
+
+    - task: Docker@2
       displayName: Build App Image
       inputs:
         command: build
