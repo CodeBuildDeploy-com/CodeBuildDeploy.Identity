@@ -57,6 +57,24 @@ spec:
                 secretKeyRef:
                   name: cbd-{{ $env }}-secret
                   key: Authentication__Microsoft__ClientSecret
+            
+            - name: Authentication__DataProtection__AzureStorage__ConnectionString
+              valueFrom:
+                secretKeyRef:
+                  name: cbd-{{ $env }}-secret
+                  key: Authentication__DataProtection__AzureStorage__ConnectionString
+            
+            - name: Authentication__DataProtection__AzureStorage__ContainerName
+              valueFrom:
+                configMapKeyRef:
+                  name: cbd-{{ $env }}-configmap
+                  key: Authentication__DataProtection__AzureStorage__ContainerName
+            
+            - name: Authentication__DataProtection__AzureStorage__BlobName
+              valueFrom:
+                configMapKeyRef:
+                  name: cbd-{{ $env }}-configmap
+                  key: Authentication__DataProtection__AzureStorage__BlobName
 
             - name: ServiceIdentifiers__OwnerId
               value: "codebuilddeploy-identity"

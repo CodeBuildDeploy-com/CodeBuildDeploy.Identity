@@ -1,11 +1,8 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -16,6 +13,7 @@ using Serilog.Extensions.Hosting;
 using CodeBuildDeploy.Identity.DA.EF.DI;
 using CodeBuildDeploy.Identity.DA.Entities;
 using CodeBuildDeploy.Identity.DA;
+using CodeBuildDeploy.Identity.Web.DI;
 
 var logConfiguration = new LoggerConfiguration().Enrich.FromLogContext().WriteTo.Async(a => a.Console(new JsonFormatter()));
 var reloadableLogger = logConfiguration.CreateBootstrapLogger();
@@ -79,52 +77,12 @@ static async Task ConfigureLoggingAsync(WebApplicationBuilder builder, Reloadabl
 static async Task ConfigureServicesAsync(WebApplicationBuilder builder)
 {
     builder.Services.ConfigureDataServices();
+
+    builder.Services.ConfigureAuthentication(builder.Configuration);
+
     builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-    var authBuilder = builder.Services.AddAuthentication();
-    var microsoftAuthSection = builder.Configuration.GetSection("Authentication:Microsoft");
-    if (microsoftAuthSection.Exists())
-    {
-        if (microsoftAuthSection.GetChildren().Any(x => x.Key == "ClientId") &&
-            microsoftAuthSection.GetChildren().Any(x => x.Key == "ClientSecret"))
-        {
-            authBuilder.AddMicrosoftAccount(microsoftOptions =>
-            {
-                microsoftOptions.ClientId = microsoftAuthSection["ClientId"]!;
-                microsoftOptions.ClientSecret = microsoftAuthSection["ClientSecret"]!;
-                microsoftOptions.CallbackPath = "/Identity/signin-microsoft";
-            });
-        }
-    }
-    var googleAuthSection = builder.Configuration.GetSection("Authentication:Google");
-    if (googleAuthSection.Exists())
-    {
-        if (googleAuthSection.GetChildren().Any(x => x.Key == "ClientId") &&
-            googleAuthSection.GetChildren().Any(x => x.Key == "ClientSecret"))
-        {
-            authBuilder.AddGoogle(googleOptions =>
-            {
-                googleOptions.ClientId = googleAuthSection["ClientId"]!;
-                googleOptions.ClientSecret = googleAuthSection["ClientSecret"]!;
-                googleOptions.CallbackPath = "/Identity/signin-google";
-            });
-        }
-    }
-    var facebookAuthSection = builder.Configuration.GetSection("Authentication:Facebook");
-    if (facebookAuthSection.Exists())
-    {
-        if (facebookAuthSection.GetChildren().Any(x => x.Key == "ClientId") &&
-            facebookAuthSection.GetChildren().Any(x => x.Key == "ClientSecret"))
-        {
-            authBuilder.AddFacebook(facebookOptions =>
-            {
-                facebookOptions.ClientId = facebookAuthSection["ClientId"]!;
-                facebookOptions.ClientSecret = facebookAuthSection["ClientSecret"]!;
-                facebookOptions.CallbackPath = "/Identity/signin-facebook";
-            });
-        }
-    }
     builder.Services.AddRazorPages();
     builder.Services.AddHealthChecks();
 
