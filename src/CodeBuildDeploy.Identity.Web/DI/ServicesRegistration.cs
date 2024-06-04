@@ -2,7 +2,9 @@
 using System.Linq;
 
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +16,11 @@ namespace CodeBuildDeploy.Identity.Web.DI
 
         public static IServiceCollection ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<ForwardedHeadersOptions>(options =>
+             {
+                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+             });
+
             var dataProtectionBuilder = services.AddDataProtection().SetApplicationName("CodeBuildDeploy");
             var azureStorageDataProtectionSection = configuration.GetSection("Authentication:DataProtection:AzureStorage");
             if (azureStorageDataProtectionSection.Exists())

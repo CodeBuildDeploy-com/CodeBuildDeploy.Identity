@@ -2,106 +2,138 @@
 @model RegisterModel
 
 <!-- Signup -->
-<section class="container g-py-100">
-    <div class="row justify-content-center">
-        <div class="col-sm-10 col-md-9 col-lg-6">
-            <div class="g-brd-around g-brd-gray-light-v4 rounded g-py-40 g-px-30">
-                <header class="text-center mb-4">
-                    <h2 class="h2 g-color-black g-font-weight-600">Signup</h2>
-                </header>
-
-                <!-- Form -->
-                <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="reg-page" role="form">
-
-                    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-6 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text g-width-45 g-brd-right-none g-brd-gray-light-v4 g-color-gray-dark-v5"><i class="icon-finance-067 u-line-icon-pro"></i></span>
-                                </div>
-                                <input asp-for="Input.FirstName" class="form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover g-py-15 g-px-15" autocomplete="firstname" aria-required="true" placeholder="John"  />
-                            </div>
-                            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-xs-12 col-sm-6 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text g-width-45 g-brd-right-none g-brd-gray-light-v4 g-color-gray-dark-v5"><i class="icon-finance-067 u-line-icon-pro"></i></span>
-                                </div>
-                                <input asp-for="Input.LastName" class="form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover g-py-15 g-px-15" autocomplete="lastname" aria-required="true" placeholder="Doe" />
-                            </div>
-                            <span asp-validation-for="Input.LastName" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text g-width-45 g-brd-right-none g-brd-gray-light-v4 g-color-gray-dark-v5"><i class="icon-communication-062 u-line-icon-pro"></i></span>
-                            </div>
-                            <input asp-for="Input.Email" class="form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover g-py-15 g-px-15" autocomplete="username" aria-required="true" placeholder="johndoe@gmail.com" />
-                        </div>
-                        <span asp-validation-for="Input.Email" class="text-danger"></span>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-6 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text g-width-45 g-brd-right-none g-brd-gray-light-v4 g-color-gray-dark-v5"><i class="icon-communication-062 u-line-icon-pro"></i></span>
-                                </div>
-                                <input asp-for="Input.Password" class="form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover g-py-15 g-px-15" autocomplete="new-password" aria-required="true" placeholder="Password" />
-                            </div>
-                            <span asp-validation-for="Input.Password" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-xs-12 col-sm-6 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text g-width-45 g-brd-right-none g-brd-gray-light-v4 g-color-gray-dark-v5"><i class="icon-media-094 u-line-icon-pro"></i></span>
-                                </div>
-                                <input asp-for="Input.ConfirmPassword" class="form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover g-py-15 g-px-15" autocomplete="new-password" aria-required="true" placeholder="Password" />
-                            </div>
-                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-check-inline u-check g-color-gray-dark-v5 g-font-size-13 g-pl-25">
-                            <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
-                            <div class="u-check-icon-checkbox-v6 g-absolute-centered--y g-left-0">
-                                <i class="fa g-rounded-2" data-check-icon="&#xf00c"></i>
-                            </div>
-                            I accept the <a href="#">Terms and Conditions</a>
-                        </label>
-                    </div>
-
-                    <button class="btn btn-md btn-block u-btn-primary rounded-0 g-py-15 mb-5" type="submit">Signup</button>
-
-                    <!-- Form Social Icons -->
-                    @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = @Model.ReturnUrl, ExternalLogins = @Model.ExternalLogins })
-                    <!-- End Form Social Icons -->
-                </form>
-                <!-- End Form -->
-
-                <div class="d-flex justify-content-center text-center g-mb-30">
-                    <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
-                    <span class="align-self-center g-color-gray-dark-v3 mx-4">OR</span>
-                    <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
+<div class="container content-space-t-1 content-space-b-2">
+    <div class="mx-lg-auto" style="max-width: 55rem;">
+        <div class="d-flex justify-content-center align-items-center flex-column min-vh-lg-75">
+            <!-- Header -->
+            <header id="header" class="navbar navbar-height navbar-light mb-3">
+                <div class="container">
+                    <a href="/Index" class="navbar-brand mx-auto" aria-label="CBD">
+                        <img src="/Identity/svg/codebuilddeploy_logo.svg" class="navbar-brand-logo" alt="CBD">
+                    </a>
                 </div>
+            </header>
+            <!-- End Header -->
 
-                <footer class="text-center">
-                    <p class="g-color-gray-dark-v5 g-font-size-13 mb-0">
-                        Already have an account? <a id="loginLink" class="g-font-weight-600" asp-area="Identity" asp-page="/Account/Login">signin</a>
-                    </p>
-                </footer>
+            <div class="position-relative">
+                <div class="card card-shadow card-login">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <div class="mb-5">
+                                        <h3 class="card-title">Create your account</h3>
+                                    </div>
+
+                                    <!-- Form Social Icons -->
+                                    @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = @Model.ReturnUrl, ButtonPrefixText = "Sign up", ExternalLogins = @Model.ExternalLogins })
+                                    <!-- End Form Social Icons -->
+                                </div>
+
+                                <!-- Form -->
+                                <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="js-validate needs-validation" role="form" novalidate>
+
+                                    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                                    <!-- Name -->
+                                    <label class="form-label" for="fullNameSrEmail">Full name</label>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="mb-4">
+                                                <input asp-for="Input.FirstName" type="text" class="form-control form-control-lg" placeholder="John" aria-label="John" required>
+                                                <span asp-validation-for="Input.FirstName" class="invalid-feedback">Please enter your first name.</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <div class="mb-4">
+                                                <input asp-for="Input.LastName" type="text" class="form-control form-control-lg" placeholder="Doe" aria-label="Doe" required>
+                                                <span asp-validation-for="Input.LastName" class="invalid-feedback">Please enter your last name.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Name -->
+
+                                    <!-- Email -->
+                                    <div class="mb-4">
+                                        <label class="form-label" for="signupSrEmail">Your email</label>
+                                        <input asp-for="Input.Email" type="email" class="form-control form-control-lg" placeholder="johndoe@gmail.com" aria-label="johndoe@gmail.com" required>
+                                        <span asp-validation-for="Input.Email" class="invalid-feedback">Please enter a valid email address.</span>
+                                    </div>
+                                    <!-- End Email -->
+
+                                    <!-- Password -->
+                                    <div class="mb-4">
+                                        <label class="form-label" for="signupSrPassword">Password</label>
+
+                                        <div class="input-group-merge">
+                                            <input asp-for="Input.Password" type="password" class="js-toggle-password form-control form-control-lg" placeholder="8+ characters required" aria-label="8+ characters required" required minlength="8" data-hs-toggle-password-options='{
+                                   "target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],
+                                   "defaultClass": "bi-eye-slash",
+                                   "showClass": "bi-eye",
+                                   "classChangeTarget": ".js-toggle-password-show-icon-1"
+                                 }'>
+                                            <a class="js-toggle-password-target-1 input-group-append input-group-text" href="javascript:;">
+                                                <i class="js-toggle-password-show-icon-1 bi-eye"></i>
+                                            </a>
+
+                                            <span asp-validation-for="Input.Password" class="invalid-feedback">Your password is invalid. Please try again.</span>
+                                        </div>
+                                    </div>
+                                    <!-- End Password -->
+
+                                    <!-- Confirm Password -->
+                                    <div class="mb-4">
+                                        <label class="form-label" for="signupSrConfirmPassword">Confirm password</label>
+
+                                        <div class="input-group-merge">
+                                            <input asp-for="Input.ConfirmPassword" type="password" class="js-toggle-password form-control form-control-lg" placeholder="8+ characters required" aria-label="8+ characters required" required minlength="8" data-hs-toggle-password-options='{
+                                   "target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],
+                                   "defaultClass": "bi-eye-slash",
+                                   "showClass": "bi-eye",
+                                   "classChangeTarget": ".js-toggle-password-show-icon-2"
+                                 }'>
+                                            <a class="js-toggle-password-target-2 input-group-append input-group-text" href="javascript:;">
+                                                <i class="js-toggle-password-show-icon-2 bi-eye"></i>
+                                            </a>
+
+                                            <span asp-validation-for="Input.ConfirmPassword" class="invalid-feedback">Password does not match the confirm password.</span>
+                                        </div>
+                                    </div>
+                                    <!-- End Confirm Password -->
+
+                                    <!-- Terms Check -->
+                                    <div class="form-check mb-4">
+                                        <input class="form-check-input" type="checkbox" value="" id="termsCheckbox" required>
+                                        <label class="form-check-label" for="termsCheckbox">I accept the <a href="#">Terms and Conditions</a></label>
+                                        <span class="invalid-feedback">Please accept our Terms and Conditions.</span>
+                                    </div>
+                                    <!-- End Terms Check -->
+
+                                    <div class="d-grid gap-4">
+                                        <button type="submit" class="btn btn-primary btn-lg">Create an account</button>
+                                    </div>
+                                </form>
+                                <!-- End Form -->
+                            </div>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-md-4 d-md-flex justify-content-center flex-column bg-soft-primary p-8 p-md-5" style="background-image: url(/Identity/svg/components/wave-pattern.svg);">
+                            <h5 class="mb-4">Remember your password?</h5>
+
+                            <span class="d-block">
+                                <a class="link link-pointer" asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="@Model.ReturnUrl">Log in</a>
+                            </span>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
             </div>
         </div>
     </div>
-</section>
+</div>
 <!-- End Signup -->
 
 @section Scripts {
