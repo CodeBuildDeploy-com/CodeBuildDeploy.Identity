@@ -1,0 +1,42 @@
+﻿@{
+    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
+    {
+        Layout = parentLayout.ToString();
+    }
+    else
+    {
+        Layout = "/Areas/Identity/Pages/_Layout.cshtml";
+    }
+}
+
+<!-- Row -->
+<div class="row">
+    <!-- Main Col -->
+    <div class="col-md-8">
+        <div class="card-body">
+            <div class="text-center">
+                <div class="mb-5">
+                    <h3 class="card-title">Manage your account</h3>
+                </div>
+            </div>
+
+            <hr class="hr" />
+
+            <!-- Form -->
+            @RenderBody()
+            <!-- End Form -->
+        </div>
+    </div>
+    <!-- End Main Col -->
+
+    <!-- Right Col -->
+    <div class="col-md-4 d-md-flex justify-content-center flex-column bg-soft-primary p-8 p-md-5" style="background-image: url(/Identity/svg/components/wave-pattern.svg);">
+        <partial name="_ManageNav" />
+    </div>
+    <!-- End Right Col -->
+</div>
+<!-- End Row -->
+
+@section Scripts {
+    @RenderSection("scripts", required: false)
+}
