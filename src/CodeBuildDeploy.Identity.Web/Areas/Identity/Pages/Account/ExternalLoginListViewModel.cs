@@ -7,6 +7,8 @@ namespace CodeBuildDeploy.Identity.Web.Areas.Identity.Pages.Account
     {
         public string ReturnUrl { get; set; }
 
+        public string ButtonPrefixText { get; set; }
+
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
     }
 }

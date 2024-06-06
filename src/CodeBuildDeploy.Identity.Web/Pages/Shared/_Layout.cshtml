@@ -2,121 +2,81 @@
 <html lang="en">
 
 <head>
-    <title>@ViewData["Title"] - Code-Build-Deploy</title>
-
     <!-- Meta -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <!-- Title -->
+    <title>@ViewData["Title"] - Code-Build-Deploy</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="~/favicon.ico">
+    <link rel="shortcut icon" href="/favicon.ico">
 
-    <!-- Web Fonts -->
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans%3A400%2C300%2C500%2C600%2C700%7CPlayfair+Display%7CRoboto%7CRaleway%7CSpectral%7CRubik">
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <!-- CSS Global Compulsory -->
-    <link rel="stylesheet" href="~/vendor/bootstrap/bootstrap.min.css">
-    <!-- CSS Global Icons -->
-    <link rel="stylesheet" href="~/vendor/icon-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="~/vendor/icon-line/css/simple-line-icons.css">
-    <link rel="stylesheet" href="~/vendor/icon-etlinefont/style.css">
-    <link rel="stylesheet" href="~/vendor/icon-line-pro/style.css">
-    <link rel="stylesheet" href="~/vendor/icon-hs/style.css">
-    <link rel="stylesheet" href="~/vendor/animate.css">
-    <link rel="stylesheet" href="~/vendor/fancybox/jquery.fancybox.min.css">
-    <link rel="stylesheet" href="~/vendor/typedjs/typed.css">
-    <link rel="stylesheet" href="~/vendor/hamburgers/hamburgers.min.css">
+    <!-- CSS Vendor Plugins -->
+    <link rel="stylesheet" href="/Identity/vendor/bootstrap-icons/font/bootstrap-icons.css">
 
     <!-- CSS Unify -->
-    <link rel="stylesheet" href="~/css/unify-core.css">
-    <link rel="stylesheet" href="~/css/unify-components.css">
-    <link rel="stylesheet" href="~/css/unify-globals.css">
+    <link rel="stylesheet" href="/Identity/css/theme.min.css">
 
-    <!-- CSS Customization -->
-    <link rel="stylesheet" href="~/css/custom.css">
-
+    <!-- CSS Razor Pages -->
     @RenderSection("styles", required: false)
 </head>
-<body>
-    <main>
-        <!-- Content Part -->
-        @RenderBody()
-        <!-- End Content Part -->
+<body class="d-flex align-items-center min-h-100 bg-light">
 
+    <!-- Main Content -->
+    <main id="content" role="main" class="flex-grow-1 overflow-hidden">
+        <div class="container content-space-t-1 content-space-b-2">
+            <div class="mx-lg-auto" style="max-width: 55rem;">
+                <div class="d-flex justify-content-center align-items-center flex-column min-vh-lg-75">
+                    <!-- Header -->
+                    <header id="header" class="navbar navbar-height navbar-light mb-3">
+                        <div class="container">
+                            <a href="/Index" class="navbar-brand mx-auto" aria-label="CBD">
+                                <img src="/Identity/svg/codebuilddeploy_logo.svg" class="navbar-brand-logo" alt="CBD">
+                            </a>
+                        </div>
+                    </header>
+                    <!-- End Header -->
+                    <!-- Content Part -->
+                    <div class="position-relative">
+                        <div class="card card-shadow card-login">
+                            @RenderBody()
+                        </div>
+                    </div>
+                    <!-- End Content Part -->
+                </div>
+            </div>
+        </div>
     </main>
-
-    <div class="u-outer-spaces-helper"></div>
-
-    <!-- JS Global Compulsory -->
-    <script src="~/vendor/jquery/jquery.min.js"></script>
-    <script src="~/vendor/jquery-migrate/jquery-migrate.min.js"></script>
-    <script src="~/vendor/popper.js/popper.min.js"></script>
-    <script src="~/vendor/bootstrap/bootstrap.min.js"></script>
-
+    <!-- End Main Content -->
+    <!-- JS Global Compulsory  -->
+    <script src="/Identity/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- JS Implementing Plugins -->
-    <script src="~/vendor/fancybox/jquery.fancybox.min.js"></script>
-    <script src="~/vendor/masonry/dist/masonry.pkgd.min.js"></script>
-    <script src="~/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
-    <script src="~/vendor/typedjs/typed.min.js"></script>
+    <script src="/Identity/vendor/hs-toggle-password/dist/js/hs-toggle-password.js"></script>
 
     <!-- JS Unify -->
-    <script src="~/js/hs.core.js"></script>
-    <script src="~/js/components/hs.header.js"></script>
-    <script src="~/js/helpers/hs.hamburgers.js"></script>
-    <script src="~/js/components/hs.tabs.js"></script>
-    <script src="~/js/components/hs.popup.js"></script>
-    <script src="~/js/components/text-animation/hs.text-slideshow.js"></script>
-    <script src="~/js/components/hs.go-to.js"></script>
-    
+    <script src="/Identity/js/theme.min.js"></script>
+
     @RenderSection("scripts", required: false)
 
     <!-- JS Plugins Init. -->
     <script>
-      $(document).on('ready', function () {
-        // initialization of tabs
-        $.HSCore.components.HSTabs.init('[role="tablist"]');
+        (function () {
+            // INITIALIZATION OF BOOTSTRAP VALIDATION
+            // =======================================================
+            HSBsValidation.init('.js-validate', {
+                onSubmit: data => {
+                }
+            })
 
-        // initialization of popups
-        $.HSCore.components.HSPopup.init('.js-fancybox');
-
-        // initialization of go to
-        $.HSCore.components.HSGoTo.init('.js-go-to');
-
-        // initialization of text animation (typing)
-        $(".u-text-animation.u-text-animation--typing").typed({
-          strings: [
-            "an awesome template",
-            "perfect template",
-            "just like a boss"
-          ],
-          typeSpeed: 60,
-          loop: true,
-          backDelay: 1500
-        });
-      });
-
-      $(window).on('load', function () {
-        // initialization of header
-        $.HSCore.components.HSHeader.init($('#js-header'));
-        $.HSCore.helpers.HSHamburgers.init('.hamburger');
-
-        // initialization of masonry
-        $('.masonry-grid').imagesLoaded().then(function () {
-          $('.masonry-grid').masonry({
-            columnWidth: '.masonry-grid-sizer',
-            itemSelector: '.masonry-grid-item',
-            percentPosition: true
-          });
-        });
-      });
-
-      $(window).on('resize', function () {
-        setTimeout(function () {
-          $.HSCore.components.HSTabs.init('[role="tablist"]');
-        }, 200);
-      });
+            // INITIALIZATION OF TOGGLE PASSWORD
+            // =======================================================
+            new HSTogglePassword('.js-toggle-password')
+        })()
     </script>
 
 </body>
