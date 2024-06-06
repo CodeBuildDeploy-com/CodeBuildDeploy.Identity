@@ -18,7 +18,7 @@ namespace CodeBuildDeploy.Identity.Web.DI
         {
             services.Configure<ForwardedHeadersOptions>(options =>
              {
-                 options.ForwardedHeaders = ForwardedHeaders.All;
+                 options.ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedFor;
              });
 
             var dataProtectionBuilder = services.AddDataProtection().SetApplicationName("CodeBuildDeploy");
