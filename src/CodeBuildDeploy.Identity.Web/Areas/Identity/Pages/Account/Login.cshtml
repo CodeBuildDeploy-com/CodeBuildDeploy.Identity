@@ -2,78 +2,89 @@
 @model LoginModel
 
 <!-- Login -->
-<section class="container g-py-150">
-    <div class="row justify-content-center">
-        <div class="col-sm-8 col-lg-6">
-            <div class="g-brd-around g-brd-gray-light-v4 rounded g-py-40 g-px-30">
-                <header class="text-center mb-4">
-                    <h2 class="h2 g-color-black g-font-weight-600">Sign In</h2>
-                </header>
-
-                <!-- Form -->
-                <form id="account" method="post" class="g-py-15" role="form">
-
-                    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-
-                    <div class="mb-4">
-                        <div class="input-group g-brd-primary--focus">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text g-width-45 g-brd-right-none g-brd-gray-light-v4 g-color-gray-dark-v5"><i class="icon-finance-067 u-line-icon-pro"></i></span>
-                            </div>
-                            <input asp-for="Input.Email" class="form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-py-15 g-px-15" placeholder="johndoe@gmail.com" />
-                        </div>
-                        <span asp-validation-for="Input.Email" class="text-danger"></span>
-                    </div>
-
-                    <div class="g-mb-35">
-                        <div class="input-group g-brd-primary--focus mb-4">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text g-width-45 g-brd-right-none g-brd-gray-light-v4 g-color-gray-dark-v5"><i class="icon-media-094 u-line-icon-pro"></i></span>
-                            </div>
-                            <input asp-for="Input.Password" type="password" class="form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-py-15 g-px-15" , placeholder="Password" />
-                        </div>
-                        <span asp-validation-for="Input.Password" class="text-danger"></span>
-                        <div class="row justify-content-between">
-                            <div class="col align-self-center">
-                                <label class="form-check-inline u-check g-color-gray-dark-v5 g-font-size-12 g-pl-25 mb-0">
-                                    <input asp-for="Input.RememberMe" type="checkbox" class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" />
-                                    <div class="u-check-icon-checkbox-v6 g-absolute-centered--y g-left-0">
-                                        <i class="fa g-rounded-2" data-check-icon="&#xf00c"></i>
-                                    </div>
-                                    Keep signed in
-                                </label>
-                            </div>
-                            <div class="col align-self-center text-right">
-                                <a class="g-font-size-12" href="#">Forgot password?</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-5">
-                        <button class="btn btn-md btn-block u-btn-primary g-py-13" type="submit">Login</button>
-                    </div>
-                </form>
-                <!-- End Form -->
-
-                <!-- Form Social Icons -->
-                @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = @Model.ReturnUrl, ExternalLogins = @Model.ExternalLogins })
-                <!-- End Form Social Icons -->
-
-                <div class="d-flex justify-content-center text-center g-mb-30">
-                    <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
-                    <span class="align-self-center g-color-gray-dark-v3 mx-4">OR</span>
-                    <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
+<div class="row">
+    <!-- Main Col -->
+    <div class="col-md-8">
+        <div class="card-body">
+            <div class="text-center">
+                <div class="mb-5">
+                    <h3 class="card-title">Sign In</h3>
                 </div>
 
-                <footer class="text-center">
-                    <p class="g-color-gray-dark-v5 g-font-size-13 mb-0">
-                        Don't have an account?  <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="g-font-weight-600">signup</a>
-                    </p>
-                </footer>
+                <!-- Form Social Icons -->
+                @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = @Model.ReturnUrl, ButtonPrefixText = "Log in", ExternalLogins = @Model.ExternalLogins })
+                <!-- End Form Social Icons -->
+
             </div>
+
+            <!-- Form -->
+            <form id="account" method="post" class="js-validate needs-validation" novalidate>
+
+                <div asp-validation-summary="ModelOnly" class="invalid-feedback" role="alert"></div>
+
+                <!-- Email -->
+                <div class="mb-4">
+                <label class="form-label" for="signinSrEmail">Your email</label>
+                <input asp-for="Input.Email" type="email" class="form-control form-control-lg" tabindex="0" placeholder="johndoe@gmail.com" aria-label="johndoe@gmail.com" required>
+                <span asp-validation-for="Input.Email" class="invalid-feedback">Please enter a valid email address.</span>
+                </div>
+                <!-- End Email -->
+
+                <!-- Password -->
+                <div class="mb-4">
+                <label class="form-label" for="signupSrPassword" tabindex="1">Password</label>
+
+                <div class="input-group-merge">
+                    <input asp-for="Input.Password" type="password" class="js-toggle-password form-control form-control-lg" placeholder="8+ characters required" aria-label="8+ characters required" required minlength="8" data-hs-toggle-password-options='{
+                            "target": "#changePassTarget",
+                            "defaultClass": "bi-eye-slash",
+                            "showClass": "bi-eye",
+                            "classChangeTarget": "#changePassIcon"
+                            }'>
+                    <a id="changePassTarget" class="input-group-append input-group-text" href="javascript:;">
+                    <i id="changePassIcon" class="bi-eye"></i>
+                    </a>
+
+                    <span asp-validation-for="Input.Password" class="invalid-feedback">Please enter a valid password.</span>
+                </div>
+                </div>
+                <!-- End Password -->
+
+                <!-- Checks -->
+                <div class="row justify-content-between mb-5">
+                    <div class="col">
+                        <div class="form-check mb-4">
+                            <input asp-for="Input.RememberMe" type="checkbox" id="termsCheckbox" class="form-check-input" />
+                            <label class="form-check-label" for="termsCheckbox">Keep signed in</label>
+                        </div>
+                    </div>
+                    <div class="col text-end">
+                        <a asp-area="Identity" asp-page="/Account/ResetPassword" class="form-label-link">Forgot password?</a>
+                    </div>
+                </div>
+                <!-- End Checks -->
+
+                <!-- Submit Button -->
+                <div class="d-grid gap-4">
+                    <button type="submit" class="btn btn-primary btn-lg">Sign in</button>
+                </div>
+                <!-- End Submit Button -->
+            </form>
+            <!-- End Form -->
         </div>
     </div>
-</section>
+    <!-- End Main Col -->
+
+    <!-- Right Col -->
+    <div class="col-md-4 d-md-flex justify-content-center flex-column bg-soft-primary p-8 p-md-5" style="background-image: url(/Identity/svg/components/wave-pattern.svg);">
+        <h5 class="mb-4">Don't have an account yet?</h5>
+
+        <span class="d-block">
+            <a asp-area="Identity" asp-page="/Account/Register" asp-route-returnUrl="@Model.ReturnUrl" class="link link-pointer">Sign up here</a>
+        </span>
+    </div>
+    <!-- End Right Col -->
+</div>
 <!-- End Login -->
 
 @section Scripts {

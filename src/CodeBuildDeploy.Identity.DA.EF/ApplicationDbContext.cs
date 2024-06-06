@@ -5,7 +5,7 @@ using CodeBuildDeploy.Identity.DA.Entities;
 
 namespace CodeBuildDeploy.Identity.DA
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityUserContext<ApplicationUser>
     {
         public const string SchemaName = "idnt";
 
