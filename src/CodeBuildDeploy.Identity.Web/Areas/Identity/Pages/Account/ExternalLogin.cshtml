@@ -1,0 +1,70 @@
+﻿@page
+@model ExternalLoginModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<!-- Row -->
+<div class="row">
+    <!-- Main Col -->
+    <div class="col-md-12">
+        <div class="card-body">
+            <div class="text-center">
+                <div class="mb-5">
+                    <h3 class="card-title">@ViewData["Title"]</h3>
+                </div>
+            </div>
+
+            <hr class="hr" />
+
+            <h6 id="external-login-title">Associate your @Model.ProviderDisplayName account.</h6>
+
+            <p class="text-secondary">
+                You've successfully authenticated with <strong>@Model.ProviderDisplayName</strong>.
+                Click the Register button to register these details and finish logging in.
+            </p>
+
+            <!-- Form -->
+            <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                <!-- Name -->
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.FirstName" class="form-control" placeholder="@Model.Input.FirstName">
+                            <label asp-for="Input.FirstName" class="form-label"></label>
+                            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.LastName" class="form-control" placeholder="@Model.Input.LastName">
+                            <label asp-for="Input.LastName" class="form-label"></label>
+                            <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Name -->
+                <!-- Email -->
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Email" class="form-control" autocomplete="email" placeholder="@Model.Input.Email" />
+                    <label asp-for="Input.Email" class="form-label"></label>
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <!-- End Email -->
+
+                <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            </form>
+            <!-- End Form -->
+        </div>
+    </div>
+    <!-- End Main Col -->
+</div>
+<!-- End Row -->
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

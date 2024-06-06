@@ -15,15 +15,6 @@ GO
 IF SCHEMA_ID(N'idnt') IS NULL EXEC(N'CREATE SCHEMA [idnt];');
 GO
 
-CREATE TABLE [idnt].[AspNetRoles] (
-    [Id] nvarchar(450) NOT NULL,
-    [Name] nvarchar(256) NULL,
-    [NormalizedName] nvarchar(256) NULL,
-    [ConcurrencyStamp] nvarchar(max) NULL,
-    CONSTRAINT [PK_AspNetRoles] PRIMARY KEY ([Id])
-);
-GO
-
 CREATE TABLE [idnt].[AspNetUsers] (
     [Id] nvarchar(450) NOT NULL,
     [FirstName] nvarchar(max) NOT NULL,
@@ -48,16 +39,6 @@ CREATE TABLE [idnt].[AspNetUsers] (
 );
 GO
 
-CREATE TABLE [idnt].[AspNetRoleClaims] (
-    [Id] int NOT NULL IDENTITY,
-    [RoleId] nvarchar(450) NOT NULL,
-    [ClaimType] nvarchar(max) NULL,
-    [ClaimValue] nvarchar(max) NULL,
-    CONSTRAINT [PK_AspNetRoleClaims] PRIMARY KEY ([Id]),
-    CONSTRAINT [FK_AspNetRoleClaims_AspNetRoles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [idnt].[AspNetRoles] ([Id]) ON DELETE CASCADE
-);
-GO
-
 CREATE TABLE [idnt].[AspNetUserClaims] (
     [Id] int NOT NULL IDENTITY,
     [UserId] nvarchar(450) NOT NULL,
@@ -78,15 +59,6 @@ CREATE TABLE [idnt].[AspNetUserLogins] (
 );
 GO
 
-CREATE TABLE [idnt].[AspNetUserRoles] (
-    [UserId] nvarchar(450) NOT NULL,
-    [RoleId] nvarchar(450) NOT NULL,
-    CONSTRAINT [PK_AspNetUserRoles] PRIMARY KEY ([UserId], [RoleId]),
-    CONSTRAINT [FK_AspNetUserRoles_AspNetRoles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [idnt].[AspNetRoles] ([Id]) ON DELETE CASCADE,
-    CONSTRAINT [FK_AspNetUserRoles_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [idnt].[AspNetUsers] ([Id]) ON DELETE CASCADE
-);
-GO
-
 CREATE TABLE [idnt].[AspNetUserTokens] (
     [UserId] nvarchar(450) NOT NULL,
     [LoginProvider] nvarchar(450) NOT NULL,
@@ -97,19 +69,10 @@ CREATE TABLE [idnt].[AspNetUserTokens] (
 );
 GO
 
-CREATE INDEX [IX_AspNetRoleClaims_RoleId] ON [idnt].[AspNetRoleClaims] ([RoleId]);
-GO
-
-CREATE UNIQUE INDEX [RoleNameIndex] ON [idnt].[AspNetRoles] ([NormalizedName]) WHERE [NormalizedName] IS NOT NULL;
-GO
-
 CREATE INDEX [IX_AspNetUserClaims_UserId] ON [idnt].[AspNetUserClaims] ([UserId]);
 GO
 
 CREATE INDEX [IX_AspNetUserLogins_UserId] ON [idnt].[AspNetUserLogins] ([UserId]);
-GO
-
-CREATE INDEX [IX_AspNetUserRoles_RoleId] ON [idnt].[AspNetUserRoles] ([RoleId]);
 GO
 
 CREATE INDEX [EmailIndex] ON [idnt].[AspNetUsers] ([NormalizedEmail]);
@@ -119,7 +82,7 @@ CREATE UNIQUE INDEX [UserNameIndex] ON [idnt].[AspNetUsers] ([NormalizedUserName
 GO
 
 INSERT INTO [idnt].[__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'00000000000000_CreateIdentitySchema', N'8.0.3');
+VALUES (N'00000000000000_CreateIdentitySchema', N'8.0.6');
 GO
 
 COMMIT;
