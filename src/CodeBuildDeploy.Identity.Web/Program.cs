@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -14,6 +15,7 @@ using CodeBuildDeploy.Identity.DA.EF.DI;
 using CodeBuildDeploy.Identity.DA.Entities;
 using CodeBuildDeploy.Identity.DA;
 using CodeBuildDeploy.Identity.Web.DI;
+using System.Linq;
 
 var logConfiguration = new LoggerConfiguration().Enrich.FromLogContext().WriteTo.Async(a => a.Console(new JsonFormatter()));
 var reloadableLogger = logConfiguration.CreateBootstrapLogger();
@@ -91,6 +93,25 @@ static async Task ConfigureServicesAsync(WebApplicationBuilder builder)
 
 static async Task ConfigureAppAsync(WebApplication app)
 {
+    app.Use((context, next) =>
+    {
+        foreach (var header in context.Request.Headers)
+        {
+            if (header.Key.StartsWith("X-Forwarded-Proto"))
+            {
+                context.Request.Scheme = header.Value.First()!;
+                Log.Information("X-Forwarded-Proto: {Value}", header.Value);
+            }
+        }
+
+        return next();
+    });
+
+    app.UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedFor
+    });
+
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
@@ -102,9 +123,10 @@ static async Task ConfigureAppAsync(WebApplication app)
         // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
     }
-    app.UseHttpsRedirection();
-    app.UseStaticFiles();
 
+    app.UseHttpsRedirection();
+
+    app.UseStaticFiles();
     app.UseRouting();
 
     app.UseAuthentication();
