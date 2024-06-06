@@ -91,20 +91,32 @@ static async Task ConfigureServicesAsync(WebApplicationBuilder builder)
 
 static async Task ConfigureAppAsync(WebApplication app)
 {
+    app.Use((context, next) =>
+    {
+        foreach (var header in context.Request.Headers)
+        {
+            Log.Information("Header: {Key}: {Value}", header.Key, header.Value);
+        }
+
+        context.Request.Scheme = "https";
+        return next();
+    });
+
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
         app.UseDeveloperExceptionPage();
+        app.UseForwardedHeaders();
     }
     else
     {
         app.UseExceptionHandler("/Error");
+        app.UseForwardedHeaders();
         // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
     }
 
     app.UseHttpsRedirection();
-    app.UseForwardedHeaders();
 
     app.UseStaticFiles();
     app.UseRouting();
