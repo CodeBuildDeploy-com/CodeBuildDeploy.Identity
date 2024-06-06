@@ -5,38 +5,38 @@
     {
         <form id="externalLoginForm" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <input type="hidden" id="provider" name="provider" value="Microsoft" />
-            <ul class="list-inline text-center mb-4">
             @foreach (var p in Model.ExternalLogins)
             {
                 if (p.Name == "Microsoft")
                 {
-                    <li class="list-inline-item g-mx-2">
-                        <a class="u-icon-v1 u-icon-size--sm u-icon-slide-up--hover g-color-white g-bg-skype rounded-circle" href="javascript:$('#provider').val('@p.Name');$('#externalLoginForm').submit();">
-                            <i class="g-font-size-default g-line-height-1 u-icon__elem-regular fa fa-skype"></i>
-                            <i class="g-font-size-default g-line-height-0_8 u-icon__elem-hover fa fa-skype"></i>
-                        </a>
-                    </li>
+                    <a class="btn btn-white btn-lg d-grid mb-4" href="javascript:$('#provider').val('@p.Name');$('#externalLoginForm').submit();">
+                        <span class="d-flex justify-content-center align-items-center">
+                            <img class="avatar avatar-xss me-2" src="/Identity/svg/brands/microsoft-icon.svg" alt="Google">
+                            @Model.ButtonPrefixText with Microsoft
+                        </span>
+                    </a>
                 }
                 else if (p.Name == "Google")
                 {
-                    <li class="list-inline-item g-mx-2">
-                        <a class="u-icon-v1 u-icon-size--sm u-icon-slide-up--hover g-color-white g-bg-google-plus rounded-circle" href="javascript:$('#provider').val('@p.Name');$('#externalLoginForm').submit();">
-                            <i class="g-font-size-default g-line-height-1 u-icon__elem-regular fa fa-google"></i>
-                            <i class="g-font-size-default g-line-height-0_8 u-icon__elem-hover fa fa-google"></i>
-                        </a>
-                    </li>
+                    <a class="btn btn-white btn-lg d-grid mb-4" href="javascript:$('#provider').val('@p.Name');$('#externalLoginForm').submit();">
+                        <span class="d-flex justify-content-center align-items-center">
+                            <img class="avatar avatar-xss me-2" src="/Identity/svg/brands/google-icon.svg" alt="Google">
+                            @Model.ButtonPrefixText with Google
+                        </span>
+                    </a>
                 }
                 else if (p.Name == "Facebook")
                 {
-                    <li class="list-inline-item g-mx-2">
-                        <a class="u-icon-v1 u-icon-size--sm u-icon-slide-up--hover g-color-white g-bg-facebook rounded-circle" href="javascript:$('#provider').val('@p.Name');$('#externalLoginForm').submit();">
-                            <i class="g-font-size-default g-line-height-1 u-icon__elem-regular fa fa-facebook"></i>
-                            <i class="g-font-size-default g-line-height-0_8 u-icon__elem-hover fa fa-facebook"></i>
-                        </a>
-                    </li>
+                    <a class="btn btn-white btn-lg d-grid mb-4" href="javascript:$('#provider').val('@p.Name');$('#externalLoginForm').submit();">
+                        <span class="d-flex justify-content-center align-items-center">
+                            <img class="avatar avatar-xss me-2" src="/Identity/svg/brands/facebook-icon.svg" alt="Google">
+                            @Model.ButtonPrefixText with Facebook
+                        </span>
+                    </a>
                 }
             }
-            </ul>
         </form>
+
+        <span class="divider-center text-muted mb-4">OR</span>
     }
 }
