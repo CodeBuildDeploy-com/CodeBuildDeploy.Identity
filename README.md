@@ -1,5 +1,3 @@
-[[_TOC_]]
-
 # Code Build Deploy Identity Service
 
 The Code Build Deploy identity service (https://www.codebuilddeploy.com/identity / https://www.codebuilddeploy.co.uk/identity).
