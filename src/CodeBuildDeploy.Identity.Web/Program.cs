@@ -12,8 +12,6 @@ using Serilog.Formatting.Json;
 using Serilog.Extensions.Hosting;
 
 using CodeBuildDeploy.Identity.DA.EF.DI;
-using CodeBuildDeploy.Identity.DA.Entities;
-using CodeBuildDeploy.Identity.DA;
 using CodeBuildDeploy.Identity.Web.DI;
 using System.Linq;
 
@@ -80,10 +78,7 @@ static async Task ConfigureServicesAsync(WebApplicationBuilder builder)
 {
     builder.Services.ConfigureDataServices();
 
-    builder.Services.ConfigureAuthentication(builder.Configuration);
-
-    builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                    .AddEntityFrameworkStores<ApplicationDbContext>();
+    builder.Services.ConfigureIdentity(builder.Configuration);
 
     builder.Services.AddRazorPages();
     builder.Services.AddHealthChecks();
