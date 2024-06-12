@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 
 using CodeBuildDeploy.Identity.DA.Entities;
+using CodeBuildDeploy.Identity.Web.Services;
 
 namespace CodeBuildDeploy.Identity.Web.Areas.Identity.Pages.Account
 {
@@ -46,7 +47,7 @@ namespace CodeBuildDeploy.Identity.Web.Areas.Identity.Pages.Account
 
             Email = email;
             // Once you add a real email sender, you should remove this code that lets you confirm the account
-            DisplayConfirmAccountLink = true;
+            DisplayConfirmAccountLink = _sender is EmailSender && !((EmailSender)_sender).Configured;
             if (DisplayConfirmAccountLink)
             {
                 var userId = await _userManager.GetUserIdAsync(user);

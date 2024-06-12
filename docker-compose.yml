@@ -28,6 +28,7 @@ services:
       target: final
       args:
         FEED_ACCESSTOKEN: $FEED_ACCESSTOKEN
+    env_file: .env
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: https://+:5007

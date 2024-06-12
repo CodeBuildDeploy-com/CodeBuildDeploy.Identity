@@ -3,11 +3,13 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using CodeBuildDeploy.Identity.DA.Entities;
 using CodeBuildDeploy.Identity.DA;
+using CodeBuildDeploy.Identity.Web.Services;
 
 namespace CodeBuildDeploy.Identity.Web.DI
 {
@@ -82,6 +84,8 @@ namespace CodeBuildDeploy.Identity.Web.DI
             }
 
             authBuilder.AddIdentityCookies(o => { });
+
+            services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddIdentityCore<ApplicationUser>(o =>
             {
