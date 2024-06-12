@@ -75,6 +75,18 @@ spec:
                 configMapKeyRef:
                   name: cbd-{{ $env }}-configmap
                   key: Authentication__DataProtection__AzureStorage__BlobName
+            
+            - name: EmailSettings__ConnectionString
+              valueFrom:
+                secretKeyRef:
+                  name: cbd-{{ $env }}-secret
+                  key: EmailSettings__ConnectionString
+            
+            - name: EmailSettings__SenderAddress
+              valueFrom:
+                configMapKeyRef:
+                  name: cbd-{{ $env }}-configmap
+                  key: EmailSettings__SenderAddress
 
             - name: ServiceIdentifiers__OwnerId
               value: "codebuilddeploy-identity"

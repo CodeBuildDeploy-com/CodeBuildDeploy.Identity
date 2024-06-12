@@ -47,6 +47,8 @@ Authentication__Google__ClientId=Google_Client_Id
 Authentication__Google__ClientSecret=Google_Client_Secret
 Authentication__Microsoft__ClientId=Microsoft_Client_Id
 Authentication__Microsoft__ClientSecret=Microsoft_Client_Secret
+EmailSettings__ConnectionString=endpoint=Communication_Services_Connection_String
+EmailSettings__SenderAddress=DoNotReply@codebuilddeploy.com
 ```
 
 ## Building and Running
