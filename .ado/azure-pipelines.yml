@@ -11,22 +11,24 @@ resources:
   repositories:
   - repository: self
   - repository: subplatform
-    type: git
-    name: 'CodeBuildDeploy.Platform.Subscription'
+    type: github
+    endpoint: 'CodeBuildDeploy-com'
+    name: 'CodeBuildDeploy-com/CodeBuildDeploy.Platform.Subscription'
   - repository: appplatform
-    type: git
-    name: 'CodeBuildDeploy.Platform.App'
+    type: github
+    endpoint: 'CodeBuildDeploy-com'
+    name: 'CodeBuildDeploy-com/CodeBuildDeploy.Platform.App'
 
 variables:
 - name: Service.Name.KebabCase
   value: "codebuilddeploy-identity"
 
-- template: azureDevOps/variables-infrastructure.yml@subplatform
-- template: azureDevOps/variables-infrastructure.yml@appplatform
+- template: .ado/variables-infrastructure.yml@subplatform
+- template: .ado/variables-infrastructure.yml@appplatform
 
-- template: azureDevOps/variables-build.yml@subplatform
+- template: .ado/variables-build.yml@subplatform
 
-- template: azureDevOps/variables-versioning.yml@subplatform
+- template: .ado/variables-versioning.yml@subplatform
   parameters:
     buildTypeRelease: ${{ variables['build.type.release'] }}
     majorVersion: 1
