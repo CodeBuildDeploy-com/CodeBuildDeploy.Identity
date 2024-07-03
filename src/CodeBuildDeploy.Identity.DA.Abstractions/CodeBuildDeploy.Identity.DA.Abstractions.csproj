@@ -4,8 +4,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>CodeBuildDeploy.Blogs.DA</RootNamespace>
-    <Company>codebuilddeploy</Company>
-    <Copyright>Copyright © mark pollard $([System.DateTime]::UtcNow.ToString("yyyy"))</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

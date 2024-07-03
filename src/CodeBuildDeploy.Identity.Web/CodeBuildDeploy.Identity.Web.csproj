@@ -1,10 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <UserSecretsId>aspnet-CodeBuildDeploy-ABA95427-CDFF-48C3-B855-EFB1489AE319</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <!-- Turn off Invariant mode for EntityFramework. See: https://github.com/dotnet/SqlClient/issues/220 -->
     <InvariantGlobalization>false</InvariantGlobalization>
@@ -31,5 +29,4 @@
   <ItemGroup>
     <ProjectReference Include="..\CodeBuildDeploy.Identity.DA.EF\CodeBuildDeploy.Identity.DA.EF.csproj" />
   </ItemGroup>
-
 </Project>
