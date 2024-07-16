@@ -1,9 +1,12 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -12,8 +15,12 @@ using Serilog.Formatting.Json;
 using Serilog.Extensions.Hosting;
 
 using CodeBuildDeploy.Identity.DA.EF.DI;
+using CodeBuildDeploy.Identity.DA.Entities;
 using CodeBuildDeploy.Identity.Web.DI;
-using System.Linq;
+using CodeBuildDeploy.Identity.Web.MinimalApis;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http.HttpResults;
+using System.Runtime.InteropServices;
 
 var logConfiguration = new LoggerConfiguration().Enrich.FromLogContext().WriteTo.Async(a => a.Console(new JsonFormatter()));
 var reloadableLogger = logConfiguration.CreateBootstrapLogger();
@@ -24,20 +31,17 @@ try
     Log.Information("Creating WebApplicationBuilder");
     var builder = WebApplication.CreateBuilder(args);
 
-    Log.Information("Configuring Configuration");
-    await ConfigureConfigurationAsync(builder);
-
     Log.Information("Reconfiguring Logging");
     await ConfigureLoggingAsync(builder, reloadableLogger);
 
-    Log.Information("Configuring Services");
+    Log.Information("Configuring Services / DI");
     await ConfigureServicesAsync(builder);
 
     Log.Information("Building WebApplication");
     var app = builder.Build();
 
-    Log.Information("Configuring WebApplication");
-    await ConfigureAppAsync(app);
+    Log.Information("Configuring WebApplication Pipeline Middleware");
+    await ConfigureRequestPipelineAsync(app);
 
     Log.Information("Running WebApplication");
     await app.RunAsync();
@@ -50,17 +54,6 @@ finally
 {
     Log.Information("WebApplication Shutdown");
     Log.CloseAndFlush();
-}
-
-static async Task ConfigureConfigurationAsync(WebApplicationBuilder builder)
-{
-    // These are already registered
-    //var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-    //builder.Configuration.AddJsonFile("appsettings.json", false, true);
-    //builder.Configuration.AddJsonFile($"appsettings.{env}.json", true, true);
-    //builder.Configuration.AddEnvironmentVariables();
-
-    await Task.CompletedTask;
 }
 
 static async Task ConfigureLoggingAsync(WebApplicationBuilder builder, ReloadableLogger reloadableLogger)
@@ -86,26 +79,9 @@ static async Task ConfigureServicesAsync(WebApplicationBuilder builder)
     await Task.CompletedTask;
 }
 
-static async Task ConfigureAppAsync(WebApplication app)
+static async Task ConfigureRequestPipelineAsync(WebApplication app)
 {
-    app.Use((context, next) =>
-    {
-        foreach (var header in context.Request.Headers)
-        {
-            if (header.Key.StartsWith("X-Forwarded-Proto"))
-            {
-                context.Request.Scheme = header.Value.First()!;
-                Log.Information("X-Forwarded-Proto: {Value}", header.Value);
-            }
-        }
-
-        return next();
-    });
-
-    app.UseForwardedHeaders(new ForwardedHeadersOptions
-    {
-        ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedFor
-    });
+    app.UseForwardedHeaders();
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
@@ -130,6 +106,11 @@ static async Task ConfigureAppAsync(WebApplication app)
     app.MapRazorPages();
 
     app.UseHealthChecks($"/v1/healthcheck");
+
+    var jwtGroup = app.MapGroup("/Identity/jwt");
+    jwtGroup.MapGet("gettoken", JWTEndpoint.GetTokenHandler).RequireAuthorization();
+    jwtGroup.MapGet("login", JWTEndpoint.GetLoginHandler);
+    jwtGroup.MapPost("login", JWTEndpoint.LoginHandler).DisableAntiforgery();
 
     await Task.CompletedTask;
 }
