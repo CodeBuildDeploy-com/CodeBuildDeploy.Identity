@@ -34,6 +34,12 @@ spec:
                   name: cbd-{{ $env }}-secret
                   key: ConnectionStrings__AccountConnection
             
+            - name: Authentication__Jwt__PrivateKey
+              valueFrom:
+                secretKeyRef:
+                  name: cbd-{{ $env }}-secret
+                  key: Authentication__Jwt__PrivateKey
+            
             - name: Authentication__Google__ClientId
               valueFrom:
                 secretKeyRef:
